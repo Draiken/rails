@@ -85,6 +85,17 @@ module ActiveRecord
         .arel
         .compile_update(substitutes, @klass.primary_key)
 
+      if um.ast.wheres.blank?
+        logger.error "[BUG] UpdateManager: #{um.inspect}"
+        logger.error "[BUG] Values: #{values.inspect}"
+        logger.error "[BUG] Substitutes: #{substitutes.inspect}"
+        logger.error "[BUG] Binds: #{binds.inspect}"
+        logger.error "[BUG] Relation: #{relation.to_sql}"
+        logger.error "[BUG] Klass: #{@klass}"
+        logger.error "[BUG] Primary Key: #{@klass.primary_key.inspect}"
+        logger.error "[BUG] id_was: #{id_was} id: #{id}"
+      end
+
       @klass.connection.update(
         um,
         'SQL',
